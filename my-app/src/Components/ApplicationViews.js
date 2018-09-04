@@ -8,7 +8,7 @@ export default class ApplicationViews extends Component {
 
 
     // Check if credentials are in local storage. this is for logging in.
-    isAuthenticated = () => localStorage.getItem("credentials") !== null
+    isAuthenticated = () => sessionStorage.getItem("credentials") !== null
 
    state = {
            
