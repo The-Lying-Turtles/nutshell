@@ -1,11 +1,13 @@
 import React, { Component } from "react"
+import LoginManager from "../../modules/LoginManager"
 
 export default class Login extends Component {
 
 
     state = {
         email: "",
-        password: ""
+        username: "",
+        password: "", 
     }
 
     // Update state whenever an input field is edited
@@ -17,20 +19,78 @@ export default class Login extends Component {
 
     // Simplistic handler for login submit
     handleLogin = (e) => {
+
+
         e.preventDefault()
 
+        let existingUser = {
+            email: this.state.email,
+            username: this.state.username,
+            password: this.state.password
+
+        }
+    
+        //Check if the values are already used in database
+        LoginManager.getAll().then((result) => {
+            let userObject = result.find(item => {
+                return existingUser.username === item.username && existingUser.email === item.email && existingUser.password === item.password
+            })
+            if (!userObject) {
+                alert("UserName or Email is incorrect")
+            } else { 
         /*
             For now, just store the email and password that
             the customer enters into local storage.
         */
-        localStorage.setItem(
+        sessionStorage.setItem(
             "credentials",
             JSON.stringify({
                 email: this.state.email,
+                username: this.state.username,
                 password: this.state.password
             })
         )
+
+        window.location.href="http://localhost:3000/"
     }
+})
+}
+
+    registerUser = (e) => {
+
+        e.preventDefault()
+
+        let newUser = {
+            email: this.state.email,
+            username: this.state.username,
+            password: this.state.password
+
+        }
+        //Check if the values are already used in database
+        LoginManager.getAll().then((result) => {
+            let userName = result.find(item => {
+                return newUser.username === item.username
+            })
+            let userEmail = result.find(item => {
+                return newUser.email === item.email
+            })
+            if (userName) {
+                alert("UserName already taken")
+            } else if (userEmail) {
+                alert("Email is already taken")
+            } else {
+                //Post to API
+                LoginManager.post(newUser).then(() => {
+                    //Clear the Form Fields
+                    alert("You are now registered!")
+                    //Put HTML Representation on the DOM
+                })
+            }
+        })
+    }
+
+    
+    
 
     render() {
         return (
@@ -43,6 +103,13 @@ export default class Login extends Component {
                        id="email"
                        placeholder="Email address"
                        required="" autoFocus="" /><br />
+                <label htmlFor="inputUsername">
+                    Username
+                </label>
+                <input onChange={this.handleFieldChange} type="username"
+                       id="username"
+                       placeholder="Username"
+                       required="" /><br />
                 <label htmlFor="inputPassword">
                     Password
                 </label>
@@ -50,7 +117,11 @@ export default class Login extends Component {
                        id="password"
                        placeholder="Password"
                        required="" /><br />
-                <button type="submit">
+             
+                <button type="submit" onClick={(e) => this.registerUser(e)}>
+                    Register
+                </button>
+                <button type="submit" onClick={this.handleLogin}>
                     Login
                 </button>
             </form>
