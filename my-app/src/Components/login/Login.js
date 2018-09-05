@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import LoginManager from "../../modules/LoginManager"
-import { Button } from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 
 
 
