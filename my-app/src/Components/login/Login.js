@@ -1,6 +1,10 @@
 import React, { Component } from "react"
 import LoginManager from "../../modules/LoginManager"
 
+
+
+
+
 export default class Login extends Component {
 
 
@@ -147,6 +151,7 @@ export default class Login extends Component {
                 <button type="submit" onClick={this.handleLogin}>
                     Login
                 </button>
+                
             </form>
         )
     }
