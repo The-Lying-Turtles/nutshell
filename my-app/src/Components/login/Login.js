@@ -7,7 +7,8 @@ export default class Login extends Component {
     state = {
         email: "",
         username: "",
-        password: "", 
+        password: "",
+        remember: false
     }
 
     // Update state whenever an input field is edited
@@ -37,6 +38,16 @@ export default class Login extends Component {
             })
             if (!userObject) {
                 alert("UserName or Email is incorrect")
+            } else if (this.state.remember) {
+                localStorage.setItem(
+                    "credentials",
+                    JSON.stringify({
+                        email: this.state.email,
+                        username: this.state.username,
+                        id: userObject.id
+                    })
+                )
+                window.location.href="http://localhost:3000/"
             } else { 
         /*
             For now, just store the email and password that
@@ -47,7 +58,7 @@ export default class Login extends Component {
             JSON.stringify({
                 email: this.state.email,
                 username: this.state.username,
-                password: this.state.password
+                id: userObject.id
             })
         )
 
@@ -89,6 +100,15 @@ export default class Login extends Component {
         })
     }
 
+    changeRememberMe = () => {
+
+        if (this.state.remember) {
+            this.setState({remember : false})
+        } else {
+            this.setState({remember : true})
+        }
+    }
+
     
     
 
@@ -117,7 +137,10 @@ export default class Login extends Component {
                        id="password"
                        placeholder="Password"
                        required="" /><br />
-             
+                <label htmlFor="rememberMe">
+                    Remember Me
+                </label>
+                <input type="checkbox" name="RememberMe" value="Remember" onClick={this.changeRememberMe}/>
                 <button type="submit" onClick={(e) => this.registerUser(e)}>
                     Register
                 </button>
