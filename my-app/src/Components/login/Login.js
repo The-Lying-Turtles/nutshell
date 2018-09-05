@@ -1,5 +1,9 @@
 import React, { Component } from "react"
 import LoginManager from "../../modules/LoginManager"
+import { Button } from 'reactstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 
 export default class Login extends Component {
 
@@ -147,6 +151,7 @@ export default class Login extends Component {
                 <button type="submit" onClick={this.handleLogin}>
                     Login
                 </button>
+                
             </form>
         )
     }
