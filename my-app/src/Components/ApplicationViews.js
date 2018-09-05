@@ -3,6 +3,9 @@ import React, { Component } from "react"
 import Login from './login/Login'
 import LoginManager from '../modules/LoginManager';
 
+
+
+
 export default class ApplicationViews extends Component {
 
 
@@ -14,14 +17,23 @@ export default class ApplicationViews extends Component {
            
    }
 
+   addMessage = message => MessageManager.post(message)
+    .then(() => MessageManager.getAll())
+    .then(messages => this.setState({
+        messages: messages
+    }))
+
    render() {
 
         return (
             <div className="NutshellView">
             <React.Fragment>
                 <Route path="/login" component={Login} />
-               
+                
             </React.Fragment>
             </div>
         )}
+
+
+
     }
