@@ -2,46 +2,49 @@ const remoteURL = "http://localhost:5002"
 
 export default Object.create(null, {
     get: {
-        value: function (id) {
-            return fetch(`${remoteURL}/tasks/${id}`).then(e => e.json())
+        value: function (section, id) {
+            return fetch(`${remoteURL}/${section}/${id}`).then(e => e.json())
         }
     },
     getAll: {
-        value: function () {
-            return fetch(`${remoteURL}/tasks`).then(e => e.json())
+        value: function (section) {
+            return fetch(`${remoteURL}/${section}`).then(e => e.json())
+        }
+    },
+    getAllOfId: {
+        value: function (section, id) {
+            return fetch(`${remoteURL}/${section}?userId=${id}`).then(e => e.json())
         }
     },
     delete: {
-        value: (id) => {
-            return fetch(`${remoteURL}/tasks/${id}`, {
+        value: (section, id) => {
+            return fetch(`${remoteURL}/${section}/${id}`, {
             method: "DELETE"
         })
-        .then(()=>{return fetch(`${remoteURL}/tasks`).then(e => e.json()) })
+        .then(()=>{return fetch(`${remoteURL}/${section}`).then(e => e.json()) })
 
         }
     },
     post: {
-        value: function (newTask) {
-            return fetch(`${remoteURL}/tasks`, {
+        value: function (section, newElement) {
+            return fetch(`${remoteURL}/${section}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(newTask)
+                body: JSON.stringify(newElement)
             }).then(e => e.json())
         }
     },
     patch: {
-        value: function (id, editTask) {
-            return fetch(`${remoteURL}/tasks/${id}`, {
+        value: function (section, id, editElement) {
+            return fetch(`${remoteURL}/${section}/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(editTask)
+                body: JSON.stringify(editElement)
             }).then(e => e.json())
         }
     }
 })
-
-y
