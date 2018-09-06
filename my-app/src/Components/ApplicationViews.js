@@ -22,6 +22,10 @@ export default class ApplicationViews extends Component {
         messages: []
     }
 
+    
+
+    
+
     render() {
 
         return (

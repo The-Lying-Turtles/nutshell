@@ -1,29 +1,39 @@
 import React, { Component } from 'react'
 import './Message.css'
 import {Link} from "react-router-dom"
+import MessageManager from '../../modules/MessageManager';
+import MessageForm from './MessageForm';
+
 
 
 export default class MessageList extends Component {
+
+    state = {
+        messages:[]
+    }
+
+
+    componentDidMount() {
+        
+            MessageManager.getAll('messages')
+              .then(messages => {
+                this.setState({ messages: messages });
+              })
+              
+        }
     render () {
         return (
             <React.Fragment>
-                <div className="messageButton">
-                    <button type="button"
-                            className="btn btn-success"
-                        //1. 
-                            onClick={() => {
-                                this.props.history.push("/messages/new")}
-                            }>New Message</button>
-                </div>
-
+               
             <section className="messages">
             {
-                this.props.messages.map(message =>
+                this.state.messages.map(message =>
                     <div key={message.id} className="card">
                         <div className="card-body">
                             <h5 className="card-title">
-                                <img src={dog} className="icon--dog" />
-                                {message.name}
+                                {message.userId}
+                                {message.message}
+                                {message.date}
                                 <button type="button"
                                 className="btn btn-success"
                             onClick={() =>  this.props.history.push(`/messages/edit/${message.id}`)}
@@ -37,6 +47,7 @@ export default class MessageList extends Component {
                 )
             }
             </section>
+            
             </React.Fragment>
         )
     }

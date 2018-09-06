@@ -1,30 +1,44 @@
 import React, { Component } from "react"
 import "./Message.css"
+import MessageManager from '../../modules/MessageManager';
 
 export default class MessageForm extends Component {
 
     state = {
-        username: "",
-        message: ""
+        messages: [],
+        userId: "",
+        message: "",
+        date: ""
     }
+//will need to pull userid from session storage.
 
     handleFieldChange = evt => {
-        const stateToChange = {}
-        stateToChange[evt.target.id] = evt.target.value
-        this.setState(stateToChange)
+        // const stateToChange = {}
+        // stateToChange[evt.target.id] = evt.target.value
+
+        this.setState({message: evt.target.value, date: Date.now()})
     }
 
+    addMessage = message => MessageManager.post(message)
+    .then(() => MessageManager.getAll())
+    .then(messages => this.setState({
+        messages: messages
+    }))
+
+    
+
     constructNewMessage = evt => {
+
         evt.preventDefault()
 
         const newMessage = {
-            username: this.state.username,
+            userId: this.state.userId,
             message: this.state.message,
+            date: this.state.date
         }
 
-        this.props.addMessage(newMessage).then(() => this.props.history.push("/mainview"))
+        this.addMessage(newMessage)
         
-
     }
 
     render() {
