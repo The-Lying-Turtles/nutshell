@@ -1,8 +1,11 @@
 import { Route, Redirect } from 'react-router-dom'
 import React, { Component } from "react"
 import Login from './login/Login'
-import TaskManager from '../modules/TaskManager'
+import LoginManager from '../modules/LoginManager'
+import ArticleManager from '../modules/ArticleManager'
 import MainView from './MainView'
+import ArticleEdit from './articles/ArticleEdit'
+import TaskManager from '../modules/TaskManager'
 import MessageManager from '../modules/MessageManager';
 import MessageEdit from './messages/MessageEdit';
 
@@ -24,10 +27,16 @@ export default class ApplicationViews extends Component {
         messages: []
     }
 
-    componentDidMount() {
+    componentDidMount(){
+        ArticleManager.getAll().then(allArticles => {
+            // console.log(allAnimals)
 
-        // Example code. Make this fit into how you have written yours.
-        TaskManager.getAllOfId("tasks", "2").then(allTasks => {
+            this.setState({
+                articles: allArticles
+            })
+        })
+
+        TaskManager.getAllOfId("tasks", JSON.parse(sessionStorage.getItem("credentials")).id).then(allTasks => {
             this.setState({
                 tasks: allTasks
             })
@@ -37,6 +46,7 @@ export default class ApplicationViews extends Component {
                 messages: messages
             })
         })
+        console.log("blah", this.state.articles)
     }
 
     user = () => {
@@ -76,16 +86,28 @@ export default class ApplicationViews extends Component {
         messages: messages
     }))
 
+    addArticle = article => ArticleManager.post(article)
+        .then(() => ArticleManager.getAll())
+        .then(articles => this.setState({
+            articles: articles
+        }))
+
+    editArticle = (id, articleObject) => ArticleManager.patch(id, articleObject)
+    .then(() => ArticleManager.getAll())
+    .then(articles => this.setState({
+        articles: articles
+    }))
+
     render() {
 
-        
+
 
         return (
-            <div className="NutshellView">
+
                 <React.Fragment>
                     <Route exact path="/" render={(props) => {
                         if (this.isAuthenticated()) {
-                            return <MainView tasks={this.state.tasks} addTask={this.addTask} deleteTask={this.deleteTask} editTask={this.editTask} messages={this.state.messages} addMessage={this.addMessage} {...props}/>
+                            return <MainView {...props} articles={this.state.articles} addArticle={this.addArticle} tasks={this.state.tasks} addTask={this.addTask} deleteTask={this.deleteTask} editTask={this.editTask} messages={this.state.messages} addMessage={this.addMessage}/>
                         } else {
                             return <Redirect to="/login" />
                         }
@@ -93,7 +115,7 @@ export default class ApplicationViews extends Component {
                     <Route exact path="/login" component={Login} />
                     <Route exact path="/mainview" render={(props) => {
                         if (this.isAuthenticated()) {
-                            return <MainView tasks={this.state.tasks} addTask={this.addTask} deleteTask={this.deleteTask} editTask={this.editTask} messages={this.state.messages} addMessage={this.addMessage}{...props}/>
+                            return <MainView {...props} articles={this.state.articles} addArticle={this.addArticle} tasks={this.state.tasks} addTask={this.addTask} deleteTask={this.deleteTask} editTask={this.editTask} messages={this.state.messages} addMessage={this.addMessage}{...props}/>
                         } else {
                             return <Redirect to="/login" />
                         }
@@ -103,9 +125,15 @@ export default class ApplicationViews extends Component {
                         edit={this.editMessage}
                         messages={this.state.messages}/>
                      }} />
+                    <Route path="/mainview/articles/edit/:articleId(\d+)" render={(props) => {
+                        return <ArticleEdit {...props}
+                        editArticle={this.editArticle}
+                        articles={this.state.articles}
 
+                        />
+                     }} />
                 </React.Fragment>
-            </div>
+
         )
     }
 }

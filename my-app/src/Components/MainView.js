@@ -7,14 +7,14 @@ import Message from './messages/Message'
 
 class MainView extends Component {
 
-    
+
 
     render() {
         return (
             <React.Fragment>
                 <Tasks {...this.props}/>
                 {/* <Events /> */}
-                <Articles />
+                <Articles {...this.props} />
                 <Message {...this.props}/>
 
             </React.Fragment>
