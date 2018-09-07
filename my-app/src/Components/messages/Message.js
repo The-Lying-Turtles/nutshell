@@ -15,8 +15,8 @@ class Message extends Component {
         return (
             <React.Fragment>
                 
-                <MessageList />
-                <MessageForm />
+                <MessageList {...this.props}/>
+                <MessageForm {...this.props}/>
                 
             </React.Fragment>
         )

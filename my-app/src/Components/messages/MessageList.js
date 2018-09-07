@@ -18,8 +18,7 @@ export default class MessageList extends Component {
             MessageManager.getAll('messages')
               .then(messages => {
                 this.setState({ messages: messages });
-              })
-              
+              })    
         }
     render () {
         return (
@@ -30,18 +29,18 @@ export default class MessageList extends Component {
                 this.state.messages.map(message =>
                     <div key={message.id} className="card">
                         <div className="card-body">
-                            <h5 className="card-title">
-                                {message.userId}
-                                {message.message}
-                                {message.date}
+                            <div className="card-title">
+                            <div className="message-card">
+                                <h3><span className="newMessage">{message.message}</span></h3>
+                                <h4 className="message-username">{message.username}</h4>
+                                <h6 className="message-Date">{Date()}</h6>
+                                </div>
                                 <button type="button"
                                 className="btn btn-success"
-                            onClick={() =>  this.props.history.push(`/messages/edit/${message.id}`)}
+                            onClick={() =>  this.props.history.push(`/mainview/message-edit/${message.id}`)}
                             className="card-link">Edit</button>
-                               <button
-                                    onClick={() => this.props.deleteMessage(message.id)}
-                                    className="card-link">Delete</button>
-                            </h5>
+                               
+                            </div>
                         </div>
                     </div>
                 )

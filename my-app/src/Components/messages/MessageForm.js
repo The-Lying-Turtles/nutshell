@@ -5,8 +5,8 @@ import MessageManager from '../../modules/MessageManager';
 export default class MessageForm extends Component {
 
     state = {
-        messages: [],
-        userId: "",
+        // messages: [],
+        username: "",
         message: "",
         date: ""
     }
@@ -19,25 +19,22 @@ export default class MessageForm extends Component {
         this.setState({message: evt.target.value, date: Date.now()})
     }
 
-    addMessage = message => MessageManager.post(message)
-    .then(() => MessageManager.getAll())
-    .then(messages => this.setState({
-        messages: messages
-    }))
-
+    user = () => JSON.parse(sessionStorage.getItem("credentials"))
     
 
     constructNewMessage = evt => {
 
-        evt.preventDefault()
-
         const newMessage = {
-            userId: this.state.userId,
+            username: this.user().username,
             message: this.state.message,
             date: this.state.date
         }
+            this.setState({
+                username: "",
+                message: "",
+                date: ""})
 
-        this.addMessage(newMessage)
+        this.props.addMessage(newMessage).then(()=> this.props.history.push("/mainview"))
         
     }
 
@@ -46,14 +43,14 @@ export default class MessageForm extends Component {
             <React.Fragment>
                 <form className="messageForm">
                     <div className="form-group">
-                        <label htmlFor="NewMessage">New Message</label>
-                        <textarea rows="20" cols="30" 
+                        <label htmlFor="NewMessage"></label>
+                        <textarea rows="20" cols="50" 
                                className="form-control"
                                onChange={this.handleFieldChange}
                                id="addMessage"
                                placeholder="New Message"></textarea>
                     </div>
-                    <button type="submit" onClick={this.constructNewMessage} className="btn btn-primary">Save</button>
+                    <button type="submit" onClick={this.constructNewMessage} className="btn btn-primary save-button">Save</button>
                 </form>
             </React.Fragment>
         )
