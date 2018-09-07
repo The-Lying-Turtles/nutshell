@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import Tasks from './tasks/Tasks'
 import Articles from './articles/Articles'
+import ArticleForm from './articles/ArticleForm'
 // import Events from './events/Events'
 // import Messages from './messages/MessageList'
 
@@ -11,7 +12,7 @@ class MainView extends Component {
             <React.Fragment>
                 <Tasks />
                 {/* <Events /> */}
-                <Articles />
+                <Articles {...this.props} />
                 {/* <Messages /> */}
             </React.Fragment>
         )
