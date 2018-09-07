@@ -28,7 +28,13 @@ export default class ApplicationViews extends Component {
             })
         })
     }
-    user = () => JSON.parse(sessionStorage.getItem("credentials"))
+
+    user = () => {
+        if (localStorage.getItem("credemtials") !== null) {
+            return JSON.parse(localStorage.getItem("credentials"))
+        }
+        else {return JSON.parse(sessionStorage.getItem("credentials"))}
+    }
 
     addTask = task => TaskManager.post("tasks", task)
     .then(() => TaskManager.getAllOfId("tasks", this.user().id))
@@ -42,6 +48,12 @@ export default class ApplicationViews extends Component {
         tasks: allTasks
     }))
 
+    editTask = (id, editedTask) => TaskManager.patch("tasks", id, editedTask)
+    .then(() => TaskManager.getAllOfId("tasks", this.user().id))
+    .then(allTasks => this.setState({
+        tasks: allTasks
+    }))
+
     render() {
 
         return (
@@ -49,7 +61,7 @@ export default class ApplicationViews extends Component {
                 <React.Fragment>
                     <Route exact path="/" render={(props) => {
                         if (this.isAuthenticated()) {
-                            return <MainView tasks={this.state.tasks} addTask={this.addTask} deleteTask={this.deleteTask} {...props}/>
+                            return <MainView tasks={this.state.tasks} addTask={this.addTask} deleteTask={this.deleteTask} editTask={this.editTask} {...props}/>
                         } else {
                             return <Redirect to="/login" />
                         }
@@ -57,7 +69,7 @@ export default class ApplicationViews extends Component {
                     <Route exact path="/login" component={Login} />
                     <Route exact path="/mainview" render={(props) => {
                         if (this.isAuthenticated()) {
-                            return <MainView tasks={this.state.tasks} addTask={this.addTask} deleteTask={this.deleteTask} {...props}/>
+                            return <MainView tasks={this.state.tasks} addTask={this.addTask} deleteTask={this.deleteTask} editTask={this.editTask} {...props}/>
                         } else {
                             return <Redirect to="/login" />
                         }
