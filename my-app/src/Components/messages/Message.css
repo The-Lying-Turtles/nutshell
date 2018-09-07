@@ -1,0 +1,24 @@
+.save-button {
+    background-color: blue;
+    border-radius: 12px;
+    color: white;
+    padding: 14px 28px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.message-card {
+    display: flex;
+    padding: 15px;
+}
+
+.newMessage {
+    
+}
+
+.edit-form {
+    width: 25%;
+    height: 35px;
+    margin-bottom: 15px;
+
+}

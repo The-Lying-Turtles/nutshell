@@ -14,7 +14,7 @@ export default class Articles extends Component {
         <div>
             <ArticleForm {...this.props}/>
 
-            <ArticleDetail {...this.props}/>
+        {this.props.articles.map(article => <ArticleDetail key= {article.id} article = {article}{...this.props}/>)}
 
             Hi Articles
         </div>
