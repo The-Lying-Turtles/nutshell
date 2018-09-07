@@ -12,7 +12,7 @@ class MainView extends Component {
     render() {
         return (
             <React.Fragment>
-                <Tasks />
+                <Tasks {...this.props}/>
                 {/* <Events /> */}
                 <Articles />
                 <Message {...this.props}/>
