@@ -3,6 +3,11 @@ import React, { Component } from "react"
 import Login from './login/Login'
 import TaskManager from '../modules/TaskManager'
 import MainView from './MainView'
+import MessageManager from '../modules/MessageManager';
+import MessageEdit from './messages/MessageEdit';
+
+
+
 
 
 export default class ApplicationViews extends Component {
@@ -25,6 +30,11 @@ export default class ApplicationViews extends Component {
         TaskManager.getAllOfId("tasks", "2").then(allTasks => {
             this.setState({
                 tasks: allTasks
+            })
+        })
+        MessageManager.getAll().then(messages => {
+            this.setState({
+                messages: messages
             })
         })
     }
@@ -54,14 +64,28 @@ export default class ApplicationViews extends Component {
         tasks: allTasks
     }))
 
+    addMessage = message => MessageManager.post(message)
+    .then(() => MessageManager.getAll(this.user().id))
+    .then(messages => this.setState({
+        messages: messages
+    }))
+
+    editMessage = (id, messageObject) => MessageManager.patch(id, messageObject)
+    .then(() => MessageManager.getAll())
+    .then(messages => this.setState({
+        messages: messages
+    }))
+
     render() {
+
+        
 
         return (
             <div className="NutshellView">
                 <React.Fragment>
                     <Route exact path="/" render={(props) => {
                         if (this.isAuthenticated()) {
-                            return <MainView tasks={this.state.tasks} addTask={this.addTask} deleteTask={this.deleteTask} editTask={this.editTask} {...props}/>
+                            return <MainView tasks={this.state.tasks} addTask={this.addTask} deleteTask={this.deleteTask} editTask={this.editTask} messages={this.state.messages} addMessage={this.addMessage} {...props}/>
                         } else {
                             return <Redirect to="/login" />
                         }
@@ -69,11 +93,17 @@ export default class ApplicationViews extends Component {
                     <Route exact path="/login" component={Login} />
                     <Route exact path="/mainview" render={(props) => {
                         if (this.isAuthenticated()) {
-                            return <MainView tasks={this.state.tasks} addTask={this.addTask} deleteTask={this.deleteTask} editTask={this.editTask} {...props}/>
+                            return <MainView tasks={this.state.tasks} addTask={this.addTask} deleteTask={this.deleteTask} editTask={this.editTask} messages={this.state.messages} addMessage={this.addMessage}{...props}/>
                         } else {
                             return <Redirect to="/login" />
                         }
                     }} />
+                    <Route path="/mainview/message-edit/:messageId(\d+)" render={(props) => {
+                        return <MessageEdit {...props}
+                        edit={this.editMessage}
+                        messages={this.state.messages}/>
+                     }} />
+
                 </React.Fragment>
             </div>
         )
